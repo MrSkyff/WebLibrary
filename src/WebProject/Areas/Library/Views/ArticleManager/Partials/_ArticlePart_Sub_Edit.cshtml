@@ -1,0 +1,38 @@
+﻿@model ArticlePart
+
+<div class="tab-pane fade" id="pills-@Model.Id" role="tabpanel" aria-labelledby="pills-tab-@Model.Id">
+    <input type="hidden" name="ArticleParts[@Model.Id].Id" value="@Model.Id" />
+    <input type="hidden" name="ArticleParts[@Model.Id].ArticleId" value="@Model.ArticleId" />
+    <input type="hidden" name="ArticleParts[@Model.Id].ParentId" value="@Model.ParentId" />
+    <div class="form-group">
+        <label class="control-label">Article sub part title</label>
+        <input id="input@(Model.Id)" onfocus="newTitle(@(Model.Id));" name="ArticleParts[@Model.Id].Title" value="@Model.Title" class="form-control" />
+        <span asp-validation-for="@Model.Title" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="@Model.Content" class="control-label"></label>
+        <textarea id="editor_@(Model.Id)" name="ArticleParts[@Model.Id].Content" class="form-control">@Model.Content</textarea>
+        <span asp-validation-for="@Model.Content" class="text-danger"></span>
+    </div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end p-2">
+        <a class="btn btn-danger btn-sm" onclick="deleteArticlePart(@Model.Id);">Remove sub article part</a>
+    </div>
+</div>
+
+<script>
+    tinymce.init({
+        selector: 'textarea#editor_@Model.Id',
+        promotion: false,
+        height: 500,
+        plugins: [
+            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | blocks | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+    });
+</script>

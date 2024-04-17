@@ -1,0 +1,76 @@
+﻿
+
+
+<div class="container p-0">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="InviteCard"></div>
+</div>
+
+
+
+
+
+
+
+
+
+<script>
+
+    function inviteListLoad() {
+
+
+        fetch('/Account/InviteApi/GetInviteList/')
+            .then(response => response.json())
+            .then(invites => {
+
+                const tbody = document.querySelector("#InviteCard");
+
+                invites.model.result.forEach(invite => {
+                    if (invite) {
+
+
+                        const InviteCard = `
+                         <div class="col">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+
+                                    <div><b>${invite.email}</b></div><hr>
+                                    <div class="text-small"><b>Invite code: </b><br>${invite.inviteCode}</div>
+                                    <div class="text-small"><b>Full name: </b>${invite.fullName}</div>
+                                    <div class="text-small"><b>Valid till: </b>${invite.validTill.slice(0, 16).replace("T", " ")}</div>
+                                    <div class="text-small"><b>Is used: </b> ${invite.isUsed}</div>
+                                    <div class="text-small"><b>Use date: </b> ${invite.useDate}</div>
+                                        <hr>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#EditModal" data-bs-whatever="getbootstrap" data-invite='${JSON.stringify(invite)}'>
+                                          Edit
+                                          </button>
+
+                                         <button type="button" class="btn btn-sm btn-outline-secondary" 
+                                                               data-bs-toggle="modal" 
+                                                               data-bs-target="#ResendModal" 
+                                                               data-bs-whatever="getbootstrap">
+                                         Resend email
+                                         </button>
+
+                                          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-bs-whatever="getbootstrap">
+                                          Delete
+                                          </button>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                `;
+
+
+                        tbody.insertAdjacentHTML("beforeend", InviteCard);
+                    }
+
+                });
+            });
+    }
+
+    inviteListLoad();
+</script>

@@ -1,0 +1,46 @@
+﻿@model ArticlePart
+
+
+<input type="hidden" name="ArticleParts[@Model.Id].Id" value="@Model.Id" />
+<input type="hidden" name="ArticleParts[@Model.Id].ArticleId" value="@Model.ArticleId" />
+
+<div class="form-group">
+    <label class="control-label">Article part title</label>
+    <input name="ArticleParts[@Model.Id].Title" value="@Model.Title" class="form-control" />
+    <span asp-validation-for="@Model.Title" class="text-danger"></span>
+</div>
+<div>
+    <label asp-for="@Model.Content" class="control-label"></label>
+    <textarea id="editor_@Model.Id" name="ArticleParts[@Model.Id].Content" class="form-control editor">@Model.Content</textarea>
+    <span asp-validation-for="@Model.Content" class="text-danger"></span>
+</div>
+
+
+
+<div class="btn-toolbar justify-content-between p-2" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group" role="group" aria-label="First group">
+        <a class="btn btn-success btn-sm" onclick="addSubArticlePartField(@Model.Id);"> Add sub article part </a>
+    </div>
+    <div class="input-group">
+        <a class="btn btn-danger btn-sm" onclick="deleteArticlePart(@Model.Id);">Remove article part</a>
+    </div>
+</div>
+<hr />
+
+<script>
+    tinymce.init({
+        selector: 'textarea#editor_@Model.Id',
+        promotion: false,
+        height: 500,
+        plugins: [
+            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | blocks | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+    });
+</script>

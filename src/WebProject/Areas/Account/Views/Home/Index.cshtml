@@ -1,0 +1,57 @@
+﻿@model User
+
+<partial name="LayoutBase/_Layout_Part_1_Body" />
+
+<div class="bg-success border rounded" style="margin-bottom: 0px;">
+    <section class="p-1 r w-100">
+        <h1 style="padding-left: 10px;" class="text-white">
+            Account
+        </h1>
+    </section>
+</div>
+
+<section class="p-2 r w-100">
+    <nav class="nav">
+        <a class="btn btn btn-primary btn-sm" href="/u/@Model.UserName/libs">Library</a>
+    </nav>
+</section>
+
+<div class="bg-white border rounded mb-2">
+    <section class="p-3 r w-100">
+
+        <div>
+            <b>Hello </b>@Model.FullName!
+        </div>
+        <hr />
+
+        <div>
+            <b>E-mail: </b>
+            @if (Model.EmailConfirmed)
+            {
+                <status class="text-success">@Model.Email</status>
+            }
+            else
+            {
+                <status>@Model.Email</status>
+                <div>
+                    <a asp-controller="Identity" asp-action="SendConfirmationEmail" asp-area="Account" class="btn btn-outline-danger btn-sm">
+                        E-mail is not confirmed! Send confirmation letter
+                    </a>
+                </div>
+            }
+        </div>
+        <hr />
+        <div><b>User name: </b>@Model.UserName <button type="button" class="btn btn-outline-primary btn-sm">Change</button></div>
+        <hr />
+        <div>
+            <a asp-controller="Identity" asp-action="ChangePassword" asp-area="Account" class="btn btn-outline-primary btn-sm">Change password</a>
+        </div>
+
+    </section>
+</div>
+
+<partial name="LayoutBase/_Layout_Part_2_Body_Block" />
+
+<partial name="Blocks/_CommonBlock" />
+
+<partial name="LayoutBase/_Layout_Part_3_Block" />

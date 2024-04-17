@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{678729AE-ABEA-4760-A149-911C83C19BA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "library", "library", "{8F758E17-882A-4396-B75C-CAF8E55870B3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0B30D6B8-501D-43A4-A4BE-FE6A228BE24F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebProject", "src\WebProject\WebProject.csproj", "{F423FD52-3C21-4169-9023-4F6949BA494E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F423FD52-3C21-4169-9023-4F6949BA494E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F423FD52-3C21-4169-9023-4F6949BA494E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F423FD52-3C21-4169-9023-4F6949BA494E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F423FD52-3C21-4169-9023-4F6949BA494E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F423FD52-3C21-4169-9023-4F6949BA494E} = {678729AE-ABEA-4760-A149-911C83C19BA2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D5013FEA-D28D-41C2-8F4F-3B8B8C5295C3}
+	EndGlobalSection
+EndGlobal

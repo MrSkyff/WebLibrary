@@ -1,0 +1,149 @@
+﻿<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+
+<script type="text/javascript">
+
+    function addMainArticlePart() {
+
+        const mainArticlePart = {
+            Id: "0",
+            Title: "Title",
+            Content: "Text",
+            ArticleId: "@Model.Article.Id",
+            ParentId: "0",
+        };
+
+        fetch('/Library/ArticleManagerApi/CreateArticlePart', {
+            method: "POST",
+            headers: { "Content-Type": "application/json; charset=utf-8", },
+            body: JSON.stringify(mainArticlePart),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+
+                //Second fetch request
+                fetch('/Library/ArticleManager/GetMainArticlePart', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json; charset=utf-8", },
+                    body: JSON.stringify(data),
+                })
+                    .then(response => response.text())
+                    .then(dataPartialView => {
+
+                        let beforeData = `
+                                   <div id="container-${data.id}">
+                                   <div class="bg-white border rounded mb-2">
+                                   <section class="p-3 r w-100">`;
+
+                        let afterData = `
+                                   </section>
+                                   </div>
+                                   </div>`;
+
+                        const dataForSubArtcilePart = `
+                                <ul id="tab${data.id}" class="nav nav-tabs mb-3" role="tablist"></ul>
+                                <div id="${data.id}" class="tab-content"></div>
+                            `;
+
+                        $('#newMainArticlePart').append(beforeData + dataPartialView + dataForSubArtcilePart + afterData);
+
+                    });
+                //Second fetch request END
+            });
+    };
+</script>
+<script>
+
+    function deleteArticlePart(id) {
+
+        fetch("/Library/ArticleManagerApi/DeleteArticlePart", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "Id": id }),
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result == true) {
+                    $("#container-" + id).remove();
+                    $("#pills-" + id).remove();
+                }
+                else {
+                    window.alert("This article part have sub articles, first remove all sub article and then main article part!");
+                }
+            });
+    }
+</script>
+<script>
+    ////////////////// Title replacer ////////////////////
+    function newTitle(id) {
+        console.log(id);
+        let input = document.querySelector('#input' + id);
+        let title = document.querySelector('#pills-' + id + '-tab');
+
+        input.addEventListener("keyup", (e) => {
+            e.preventDefault();
+            setTimeout(replaceTitle, 700);
+        });
+
+        function replaceTitle() {
+            title.textContent = input.value;
+        }
+    }
+</script>
+<script>
+
+    function addSubArticlePartField(id) {
+
+        const mainArticlePart = {
+            Id: "0",
+            Title: "Title",
+            Content: "Text",
+            ArticleId: "@Model.Article.Id",
+            ParentId: id,
+        };
+
+        fetch('/Library/ArticleManagerApi/CreateArticlePart', {
+            method: "POST",
+            headers: { "Content-Type": "application/json; charset=utf-8", },
+            body: JSON.stringify(mainArticlePart),
+        })
+            .then(response => response.json())
+            .then(data => {
+
+                //Second fetch request
+                fetch('/Library/ArticleManager/GetSubArticlePart', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json; charset=utf-8", },
+                    body: JSON.stringify(data),
+                })
+                    .then(response => response.text())
+                    .then(dataPartialView => {
+
+                        $('#' + id).append(dataPartialView);
+
+                        let dataTab = `
+                                <li class="nav-item" id="container-${data.id}" role="presentation">
+                                    <button
+                                    class="nav-link btn-sm"
+                                    id="pills-${data.id}-tab"
+                                    data-bs-toggle="pill"
+                                    data-bs-target="#pills-${data.id}"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="pills-${data.id}"
+                                    aria-selected="true">
+                                        ${data.title}
+                                    </button>
+                                </li>
+                            `;
+
+                        $('#tab' + id).append(dataTab);
+
+                    });
+                //Second fetch request END
+
+            });
+    };
+
+</script>

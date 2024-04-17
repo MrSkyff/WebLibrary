@@ -1,0 +1,14 @@
+﻿@model Invite
+<script src="~/lib/jquery/jquery.slim.min.js"></script>
+
+<div class="bg-white border rounded" style="margin-bottom: 20px;">
+    <section class="p-3 r w-100">
+        <h1>Invite manager</h1>
+    </section>
+</div>
+
+<partial name="Partials/_InviteList" />
+<br>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#NewInviteForm" data-bs-whatever="getbootstrap">Create invite</button>
+<partial name="Partials/_CreateInvite_ModalWindow" />
+<partial name="Partials/_EditInvite_ModalWindow" />

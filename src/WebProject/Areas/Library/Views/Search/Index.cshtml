@@ -1,0 +1,101 @@
+﻿@model ArticleSearchDto
+
+<partial name="LayoutBase/_Layout_Part_1_Body" />
+
+<div class="bg-success border rounded" style="margin-bottom: 8px;">
+    <section class="p-1 r w-100">
+
+        <h1 style="padding-left: 10px;" class="text-white">@Model.User.UserName`s Search</h1>
+
+    </section>
+</div>
+
+
+<div class="bg-white border rounded" style="margin-bottom: 8px;">
+    <section class="p-3 r w-100">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="margin-bottom: 0;">
+                <li class="breadcrumb-item"><a href="/u/@Model.User.UserName">@Model.User.UserName</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Search</li>
+            </ol>
+        </nav>
+    </section>
+</div>
+
+
+<div class="bg-white border rounded mb-2">
+    <section class="p-3 r w-100">
+        <form method="get" action="/u/@Model.User.UserName/Search/">
+            <label asp-for="Libraries">Search section: </label>
+            <select id="library" name="libraryUrl">
+                <option value="">Search all libraries</option>
+                @foreach (var library in Model.Libraries)
+                {
+                    @if (Model.Library.Url != null && library.Url == Model.Library.Url)
+                    {
+                        <option value="@library.Url" selected>@library.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@library.Url">@library.Name</option>
+                    }
+                }
+            </select>
+
+            <label for="searchfor">Enter a search term:</label>
+            <input type="text" id="searchfor" name="searchfor">
+
+            <button type="submit">Search</button>
+        </form>
+    </section>
+</div>
+
+
+
+<hr />
+
+
+
+@foreach (var article in Model.Article)
+{
+    <div class="bg-white border rounded mb-2">
+        <section class="p-1 r w-100">
+
+            <div class="p-1 mb-1 bg-success rounded">
+                <h4 style="margin: 0;"><a style="padding-left: 10px;" class="text-decoration-none text-white text-center" href="/u/@Model.User.UserName/lib/@(Model.Libraries.FirstOrDefault(l => l.Id == article.LibraryId).Url)/read/@article.Url">@article.Title</a></h4>
+            </div>
+
+            <p class="m-2" style="margin-bottom: 0;">@Html.Raw(article.Description)</p>
+            <hr style="margin: 5px;" />
+            <p class="m-2" style="font-size: 14px;">
+                <em>
+                    <b>Library: </b>
+                    <a class="text-decoration-none" href="/u/@Model.User.UserName/lib/@(Model.Libraries.FirstOrDefault(l => l.Id == article.LibraryId).Url)">
+                        @(Model.Libraries.FirstOrDefault(l => l.Id == article.LibraryId).Name)
+                    </a> <b> | </b>
+
+                    <b>Tags: </b>
+                    @foreach (var tag in Model.Tags.Where(t => Model.ArticleTags.Any(at => at.ArticleId == article.Id && at.TagId == t.Id)))
+                    {
+                        <span class="badge rounded-pill bg-warning">
+                            <a class="link-dark text-decoration-none" href="/u/@Model.User.UserName/Search/?tagName=@tag.Name">#@tag.Name</a>
+                        </span>
+                    }
+
+                </em>
+
+            </p>
+
+
+        </section>
+    </div>
+
+}
+
+
+
+<partial name="LayoutBase/_Layout_Part_2_Body_Block" />
+
+<partial name="Blocks/_CommonBlock" />
+
+<partial name="LayoutBase/_Layout_Part_3_Block" />

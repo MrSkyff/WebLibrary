@@ -1,0 +1,11 @@
+﻿@model ArticlePart
+
+<div class="tab-pane fade" id="pills-@Model.Id" role="tabpanel" aria-labelledby="pills-tab-@Model.Id">
+
+    <div class="form-group">
+        <h5>@Model.Title</h5>
+    </div>
+    <div>
+      @Html.Raw(@Model.Content)
+    </div>
+</div>

@@ -1,0 +1,143 @@
+﻿@model ArticleViewModel
+
+@{
+    Dictionary<string, ArticlePart> articleParts = ViewData["ArticleParts"] as Dictionary<string, ArticlePart>;
+}
+
+<script src="~/lib/tinymce/tinymce.min.js"></script>
+
+<partial name="LayoutBase/_Layout_Part_1_Body" />
+<partial name="PartialForms/_ArticleTagForm_ModalWindow" />
+
+<form method="post" class="form-horizontal">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="User.UserName" value="@Model.User.UserName" />
+    <input type="hidden" name="Library.Url" value="@Model.Library.Url" />
+
+    <!-- MAIN ARTICLE -->
+    @await Html.PartialAsync("Partials/_Article_Main_Edit", Model)
+
+    @foreach (var mainArticlePart in Model.ArticleParts.Where(x => x.Value.ParentId == 0))
+    {
+        <div id="container-@mainArticlePart.Value.Id">
+            <div class="bg-white border rounded mb-2">
+                <section class="p-3 r w-100">
+
+                    <!-- MAIN ARTICLE-PART -->
+                @await Html.PartialAsync("Partials/_ArticlePart_Main_Edit", mainArticlePart.Value)
+
+                    <!--SUB ARTICLE TAB START-->
+                    <ul id="tab@(mainArticlePart.Value.Id)" class="nav nav-tabs mb-3" role="tablist">
+                        @foreach (var subArticlePartTab in Model.ArticleParts.Where(x => x.Value.ParentId == mainArticlePart.Value.Id))
+                        {
+
+                            <li class="nav-item" id="container-@subArticlePartTab.Value.Id" role="presentation">
+                                <button class="nav-link btn-sm"
+                                        id="pills-@subArticlePartTab.Value.Id-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#pills-@subArticlePartTab.Value.Id"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pills-@subArticlePartTab.Value.Id"
+                                        aria-selected="true">
+                                    @subArticlePartTab.Value.Title
+                                </button>
+                            </li>
+
+                        }
+                    </ul>
+                    <!--SUB ARTICLE TAB END-->
+                    <!-- SUB ARTICLE-PART START-->
+                    <div id="@mainArticlePart.Value.Id" class="tab-content">
+                        @foreach (var subArticlePart in Model.ArticleParts.Where(x => x.Value.ParentId == mainArticlePart.Value.Id))
+                        {
+                            @await Html.PartialAsync("Partials/_ArticlePart_Sub_Edit", subArticlePart.Value)
+                        }
+                    </div>
+                    <!-- SUB ARTICLE-PART END-->
+
+
+                </section>
+            </div>
+        </div>
+    }
+
+
+
+    <!--NEW ARTICLE CREATION SECTION START-->
+    <div id="newMainArticlePart"></div>
+    <hr />
+    <div>
+        <a class="btn btn-primary btn-sm" onclick="addMainArticlePart();">ADD NEW ARTICLE PART</a>
+    </div>
+    <hr />
+    <!--NEW ARTICLE CREATION SECTION END-->
+
+
+
+
+
+    <partial name="Partials/_ArticleEditPageJS" />
+
+    <partial name="LayoutBase/_Layout_Part_2_Body_Block" />
+
+
+    @*################## Block cats #####################*@
+    <div class="p-4 mb-3 bg-light rounded">
+        <h4 class="fst-italic">Categories</h4>
+        <p class="mb-0">
+            <partial name="Partials/_CategoryManager"></partial>
+        </p>
+    </div>
+    @*################## Block cats END #####################*@
+
+    @*################## Block tags #####################*@
+    <div class="p-4 mb-3 bg-light rounded">
+        <h4 class="fst-italic">Tags</h4>
+        <p class="mb-0">
+            @*AFTER COMMENT START TEMP CODE FOR TAGS*@
+
+            <div id="tag-list"></div>
+
+            <script>
+                const libraryId = `@Model.Library.Id`;
+                const articleId = `@Model.Article.Id`;
+                const userId = `@Model.User.Id`;
+                console.log('LIB ID: ' + libraryId);
+                console.log('ART ID: ' + articleId);
+            </script>
+            <script src="~/js/shared/tag/load_list_by_article.js"></script>
+
+
+
+            @*############## AFTER COMMENT START TEMP CODE FOR TAGS #################*@
+        </p>
+    </div>
+    @*################## Block tags END #####################*@
+
+    @*################## Block save form button #####################*@
+    <div class="">
+
+
+        <!-- FORM SUBMITTER -->
+        <div class="form-group">
+            <div class="text-center">
+                <input type="submit" value="Save article" class="btn btn-primary" />
+                |
+                <button type="button" class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#articleTagModalWindow"
+                        data-bs-whatever="getbootstrap">
+                    Add tag
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+    @*################## Block save form button END #####################*@
+
+    <partial name="LayoutBase/_Layout_Part_3_Block" />
+
+</form>

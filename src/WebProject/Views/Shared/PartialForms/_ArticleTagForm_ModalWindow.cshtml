@@ -1,0 +1,96 @@
+﻿<div class="modal fade" id="articleTagModalWindow" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">TAG FORM</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label class="col-form-label">Tag Name:</label>
+                        <input type="text" class="form-control" id="tagName">
+                        <div id="Name-check" class="form-text"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button onclick="tagAdd()" class="btn btn-primary">OK</button>
+                    </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('tagName').addEventListener('input', validateInput);
+
+    function validateInput(event) {
+        const allowedPattern = /^[a-zA-Z-_]*$/;
+        if (!allowedPattern.test(event.target.value)) {
+            event.target.value = event.target.value.replace(/[^a-zA-Z-_]/g, '');
+        }
+    }
+
+    function tagAdd() {
+        const tagName = document.getElementById('tagName').value;
+
+        const CommandArticleTagDto = {
+            Name: tagName,
+            UserId: userId,
+            ArticleId: articleId
+        };
+
+        fetch('/Library/TagManagerApi/AddTag', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8', },
+            body: JSON.stringify(CommandArticleTagDto)
+        })
+            .then(response => response.json())
+            .then(data => {
+
+                console.log('Response');
+                console.log(data);
+
+                $("#tag-list").empty();
+                $("#articleTagModalWindow").modal("hide");
+                $("#tagName").val("");
+                tagListByArticleLoad();
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function tagDelete(tagNameF, articleIdF, userIdF){
+
+        const tagToDelete = {
+            Name: tagNameF,
+            ArticleId: articleIdF,
+            UserId: userIdF,
+        };
+
+        fetch('/Library/TagManagerApi/DeleteTag', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8', },
+            body: JSON.stringify(tagToDelete)
+        })
+            .then(response => response.json())
+            .then(data => {
+
+                console.log('Response');
+                console.log(data);
+
+                $("#tag-list").empty();
+                tagListByArticleLoad();
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+    }
+</script>

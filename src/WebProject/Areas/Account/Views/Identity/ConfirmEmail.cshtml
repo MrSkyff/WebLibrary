@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Email confirmation page";
+}
+
+<partial name="LayoutBase/_Layout_Part_1_Body" />
+
+<div class="bg-success border rounded" style="margin-bottom: 8px;">
+    <section class="p-1 r w-100">
+        <h1 style="padding-left: 10px;" class="text-white">
+            @ViewData["Title"]
+        </h1>
+    </section>
+</div>
+
+<div class="alert alert-success">
+    <strong>Success!</strong> Your email has been confirmed.
+</div>
+<a asp-area="Account" asp-controller="Home" asp-action="Index" class="w-100 btn btn-lg btn-primary" type="submit">OK</a>
+
+<partial name="LayoutBase/_Layout_Part_2_Body_Block" />
+
+<partial name="Blocks/_CommonBlock" />
+
+<partial name="LayoutBase/_Layout_Part_3_Block" />

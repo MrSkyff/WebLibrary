@@ -1,0 +1,35 @@
+﻿@model User
+
+<partial name="LayoutBase/_Layout_Part_1_Body" />
+
+<div class="bg-success border rounded" style="margin-bottom: 8px;">
+    <section class="p-1 r w-100">
+        <h1 style="padding-left: 10px;" class="text-white">
+            @Model.UserName's page
+        </h1>
+    </section>
+</div>
+
+<div class="bg-white border rounded" style="margin-bottom: 8px;">
+    <section class="p-3 r w-100">
+        <nav class="nav">
+            <ol class="breadcrumb" style="margin-bottom: 0;">
+                <li class="breadcrumb-item active" aria-current="page"> @Model.UserName</li>
+            </ol>
+        </nav>
+    </section>
+</div>
+
+<div class="bg-white border rounded" style="margin-bottom: 0;">
+    <section class="p-3 r w-100">
+        <p>
+            Page is under construction, but you can visit @Model.UserName's library by <a href="/u/@Model.UserName/libs">this link</a>
+        </p>
+    </section>
+</div>
+
+<partial name="LayoutBase/_Layout_Part_2_Body_Block" />
+
+<partial name="Blocks/_CommonBlock" />
+
+<partial name="LayoutBase/_Layout_Part_3_Block" />

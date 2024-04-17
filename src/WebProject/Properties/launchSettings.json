@@ -1,0 +1,46 @@
+﻿{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:65012",
+      "sslPort": 44335
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5206",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:7107;http://localhost:5206",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DB_CONNECTION": "Server=localhost; Database=WebProject-LocalTest; User ID='sa'; Password='Tempdevpass255'; Trusted_Connection=False; TrustServerCertificate=True;",
+        "SEND_GRID_APIKEY": "HIDDEN",
+        "SEND_GRID_EMAIL_FROM": "HIDDEN@hidden.com",
+        "SEND_GRID_EMAIL_FROM_NAME": "hidden.hidden",
+        "AWS_USERNAME": "hidden",
+        "AWS_PASSWORD": "hidden",
+        "AWS_MAILFROM": "hidden@hidden.com",
+        "LOGOUT_COOKIES_IN_DAYS": "30"
+
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

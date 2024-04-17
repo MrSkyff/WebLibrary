@@ -1,0 +1,97 @@
+﻿@model HomeViewModel
+<script src="~/lib/jquery/jquery.slim.min.js"></script>
+
+<partial name="LayoutBase/_Layout_Part_1_Body" />
+
+<script>
+
+    function libraryStatus() {
+        const ls = $("#Id").val() || 0;
+        if (ls === 0) {
+            $(".submit-type").text("Add");
+            $(".modal-title").text("Add library");
+        } else {
+            $(".submit-type").text("Update");
+            $(".modal-title").text("Edit library");
+        }
+    }
+
+</script>
+
+@if (Model.User != null)
+{
+<script>
+    const userID = '@Model.User.Id';
+    const userName = '@Model.User.UserName';
+    let isOwner = false;
+</script>
+
+    <div class="bg-success border rounded" style="margin-bottom: 8px;">
+        <section class="p-1 r w-100">
+            <h1 style="padding-left: 10px;" class="text-white">
+                @Model.User.UserName's Libraries
+            </h1>
+        </section>
+    </div>
+
+    <div class="bg-white border rounded" style="margin-bottom: 8px;">
+    <section class="p-3 r w-100">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="margin-bottom: 0;">
+                <li class="breadcrumb-item"><a href="/u/@Model.User.UserName">@Model.User.UserName</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Library list</li>
+            </ol>
+        </nav>
+    </section>
+    </div>
+
+
+    <div class="bg-white border rounded" style="margin-bottom: 0;">
+        <section class="p-3 r w-100">
+
+            <h5> Library List </h5>
+
+            <div class="row" id="LibraryList"></div>
+            <br />
+
+            @if (User.Identity.IsAuthenticated && Model.User.Id == User.FindFirst("UserId").Value)
+            {
+                <script>isOwner = true;</script>
+                <button type="button" class="btn btn-primary" 
+                data-bs-toggle="modal" 
+                data-bs-target="#libraryModalWindow"
+                data-bs-whatever="getbootstrap"
+                onclick="libraryStatus()"
+                >               
+                Add new library</button>
+            }
+
+
+        </section>
+    </div>
+
+    <partial name="PartialForms/_LibraryForm_ModalWindow" />
+    <script src="~/js/shared/library/add_edit_library.js"></script>
+    <script src="~/js/shared/library/edit_form_population.js"></script>
+    <script src="~/js/shared/library/form_field_checker.js"></script>
+    <script src="~/js/shared/library/library_list_loader.js"></script>
+    
+}
+else
+{
+    <br />
+    <br />
+    <br />
+    <br />
+    <center>
+        <h1>USER DO NOT EXIST</h1>
+        <h5>please check ulr!</h5>
+    </center>
+
+}
+
+<partial name="LayoutBase/_Layout_Part_2_Body_Block" />
+
+<partial name="Blocks/_CommonBlock" />
+
+<partial name="LayoutBase/_Layout_Part_3_Block" />

@@ -1,0 +1,84 @@
+﻿@model CategoryViewModel
+
+
+
+<partial name="LayoutBase/_Layout_Part_1_Body" />
+
+
+<div class="bg-success border rounded" style="margin-bottom: 2px;">
+    <section class="p-1 r w-100">
+        <h1 style="padding-left: 10px;" class="text-white">Sub Category: @Model.SubCategory.Name</h1>
+    </section>
+</div>
+
+<div class="bg-white border rounded" style="margin-bottom: 8px;">
+    <section class="p-1 r w-100">
+        <p class="m-2"><b>Description:</b> @Model.SubCategory.Description</p>
+    </section>
+</div>
+
+<div class="bg-white border rounded" style="margin-bottom: 0;">
+    <section class="p-3 r w-100">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="margin-bottom: 0;">
+                <li class="breadcrumb-item"><a href="/u/@Model.User.UserName">@Model.User.UserName</a></li>
+                <li class="breadcrumb-item"><a href="/u/@Model.User.UserName/libs">Library list</a></li>
+                <li class="breadcrumb-item"><a href="/u/@Model.User.UserName/lib/@Model.Library.Url">@Model.Library.Name</a></li>
+                <li class="breadcrumb-item"><a href="/u/@Model.User.UserName/lib/@Model.Library.Url/cat/@Model.Category.Url">@Model.Category.Name</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.SubCategory.Name</li>
+            </ol>
+        </nav>
+    </section>
+</div>
+
+<hr />
+
+@foreach (var article in Model.Articles)
+{
+    <div class="bg-white border rounded mb-2">
+        <section class="p-1 r w-100">
+
+            <div class="p-1 mb-1 bg-success rounded">
+                <h4 style="margin: 0;" class="d-flex justify-content-between align-items-center">
+                    <a style="padding-left: 10px;"
+                       class="text-decoration-none text-white text-center"
+                       href="/u/@Model.User.UserName/lib/@Model.Library.Url/read/@article.Url">
+                        @article.Title
+                    </a>
+
+                    @if (User.Identity.IsAuthenticated && Model.User.Id == User.FindFirst("UserId").Value)
+                    {
+                        <button class="btn btn-sm dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Options
+                        </button>
+                        <ul class="dropdown-menu w-auto">
+                            <li><a asp-area="Library" asp-controller="ArticleManager" asp-action="Edit" asp-route-value="@article.Id" class="dropdown-item">Edit</a></li>
+                        </ul>
+                    }
+                </h4>
+            </div>
+
+            <p class="m-2" style="margin-bottom: 0;">@Html.Raw(article.Description)</p>
+            <hr style="margin: 5px;" />
+            <p class="m-2" style="font-size: 14px;">
+                <em>
+                    <b>Tags: </b>
+                    @foreach (var tag in Model.Tags.Where(t => Model.ArticleTags.Any(at => at.ArticleId == article.Id && at.TagId == t.Id)))
+                    {
+                        <span class="badge rounded-pill bg-warning">
+                            <a class="link-dark text-decoration-none" href="/u/@Model.User.UserName/Search/?tagName=@tag.Name">#@tag.Name</a>
+                        </span>
+                    }
+                </em>
+            </p>
+
+        </section>
+    </div>
+
+}
+
+<partial name="LayoutBase/_Layout_Part_2_Body_Block" />
+
+<partial name="Blocks/_CommonBlock" />
+
+<partial name="LayoutBase/_Layout_Part_3_Block" />

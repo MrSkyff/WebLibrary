@@ -1,0 +1,29 @@
+﻿@model ArticleViewModel
+
+
+@for (int i = 0; i < Model.Categories.Count(); i++)
+{
+    @if (Model.Categories[i].ParentId == 0)
+    {
+
+            <div>
+
+                <input type="hidden" asp-for="@Model.Categories[i].Id" />
+                <input asp-for="@Model.Categories[i].isAssigned" type="checkbox" />
+                <label><b>@Model.Categories[i].Name</b></label>
+                <br />
+
+                @for (int i2 = 0; i2 < Model.Categories.Count(); i2++)
+                {
+                    @if (Model.Categories[i2].ParentId == Model.Categories[i].Id)
+                    {
+                        <input type="hidden" asp-for="@Model.Categories[i2].Id" />
+                        <input asp-for="@Model.Categories[i2].isAssigned" type="checkbox" />
+                        <label>@Model.Categories[i2].Name</label>
+                    }
+                }
+
+            </div>
+
+    }
+}

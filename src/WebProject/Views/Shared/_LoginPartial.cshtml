@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using WebProject.Models.Account;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<div class="p-0">
+    <ul class="nav text-small">
+        @if (SignInManager.IsSignedIn(User))
+        {
+
+            <li class="nav-item">
+                <div class="dropdown text-end">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="~/images/user-ico.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                    </a>
+                    <ul class="dropdown-menu text-small" style="">
+                        <li><a class="dropdown-item" asp-area="Account" asp-controller="Home" asp-action="Index">My Account</a></li>
+                        <li><a class="dropdown-item" href="/u/@User.Identity.Name/libs">My Libraries</a></li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li><a class="dropdown-item" href="/Account/Invite/">Invites</a></li>
+                        }
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form class="form-inline" asp-area="Account" asp-controller="Identity" asp-action="Logout">
+                                <button type="submit" class="dropdown-item">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        }
+        else
+        {
+            <li>
+                <a asp-area="Account" asp-controller="Identity" asp-action="Login" class="nav-link text-black">
+                    <svg class="bi d-block mx-auto mb-1" width="20" height="20"><use xlink:href="#people-circle" /></svg>
+                    Login
+                </a>
+            </li>
+
+            <li>
+                <a asp-area="Account" asp-controller="Identity" asp-action="Register" class="nav-link text-black">
+                    <svg class="bi d-block mx-auto mb-1" width="20" height="20"><use xlink:href="#grid" /></svg>
+                    Register
+                </a>
+            </li>
+        }
+    </ul>
+</div>
+
+

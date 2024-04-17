@@ -1,0 +1,101 @@
+﻿@model ArticleViewModel
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+
+<partial name="LayoutBase/_Layout_Part_1_Body" />
+
+@await Html.PartialAsync("Partials/_Article_Main", Model)
+
+
+<div class="bg-white border rounded" style="margin-bottom: 8px;">
+    <section class="p-3 r w-100">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="margin-bottom: 0;">
+                <li class="breadcrumb-item"><a href="/u/@Model.User.UserName">@Model.User.UserName</a></li>
+                <li class="breadcrumb-item"><a href="/u/@Model.User.UserName/libs">Library list</a></li>
+                <li class="breadcrumb-item"><a href="/u/@Model.User.UserName/lib/@Model.Library.Url">@Model.Library.Name</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Article.Title</li>
+            </ol>
+        </nav>
+    </section>
+</div>
+
+
+@foreach (var mainArticlePart in Model.ArticleParts.Where(x => x.Value.ParentId == 0))
+{
+    <div id="container-@mainArticlePart.Value.Id">
+        <div class="bg-white border rounded mb-2">
+            <section class="p-3 r w-100">
+
+                <!-- MAIN ARTICLE-PART -->
+            @await Html.PartialAsync("Partials/_ArticlePart_Main", mainArticlePart.Value)
+
+                <!--SUB ARTICLE TAB START-->
+                <ul id="tab@(mainArticlePart.Value.Id)" class="nav nav-tabs mb-3" role="tablist">
+                    @foreach (var subArticlePartTab in Model.ArticleParts.Where(x => x.Value.ParentId == mainArticlePart.Value.Id))
+                    {
+
+                        <li class="nav-item" id="container-@subArticlePartTab.Value.Id" role="presentation">
+                            <button class="nav-link btn-sm"
+                                    id="pills-@subArticlePartTab.Value.Id-tab"
+                                    data-bs-toggle="pill"
+                                    data-bs-target="#pills-@subArticlePartTab.Value.Id"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="pills-@subArticlePartTab.Value.Id"
+                                    aria-selected="true">
+                                @subArticlePartTab.Value.Title
+                            </button>
+                        </li>
+
+                    }
+                </ul>
+                <!--SUB ARTICLE TAB END-->
+                <!-- SUB ARTICLE-PART START-->
+                <div id="@mainArticlePart.Value.Id" class="tab-content">
+                    @foreach (var subArticlePart in Model.ArticleParts.Where(x => x.Value.ParentId == mainArticlePart.Value.Id))
+                    {
+                        @await Html.PartialAsync("Partials/_ArticlePart_Sub", subArticlePart.Value)
+                    }
+                </div>
+                <!-- SUB ARTICLE-PART END-->
+
+
+            </section>
+        </div>
+    </div>
+}
+
+
+
+
+<script>
+    const libraryId = `@Model.Library.Id`;
+    const articleId = `@Model.Article.Id`;
+    const userId = `@Model.User.Id`;
+</script>
+
+
+<partial name="LayoutBase/_Layout_Part_2_Body_Block" />
+
+
+@*################## Block cats #####################*@
+<div class="p-4 mb-3 bg-light rounded">
+    <h4 class="fst-italic">Categories</h4>
+    <p class="mb-0">
+        <partial name="Partials/_ArticleCategories" />
+    </p>
+</div>
+@*################## Block cats END #####################*@
+
+@*################## Block tags #####################*@
+<div class="p-4 mb-3 bg-light rounded">
+    <h4 class="fst-italic">Tags</h4>
+    @foreach (var tag in Model.Tags.Where(t => Model.ArticleTags.Any(at => at.ArticleId == Model.Article.Id && at.TagId == t.Id)))
+    {
+        <span class="badge rounded-pill bg-warning">
+            <a class="link-dark text-decoration-none" href="/u/@Model.User.UserName/Search/?tagName=@tag.Name">#@tag.Name</a>
+        </span>
+    }
+</div>
+@*################## Block tags END #####################*@
+<partial name="LayoutBase/_Layout_Part_3_Block" />

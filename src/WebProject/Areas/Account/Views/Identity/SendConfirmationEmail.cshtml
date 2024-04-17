@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Confirmation email";
+}
+
+<partial name="LayoutBase/_Layout_Part_1_Body" />
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">@ViewData["Title"]</h5>
+    </div>
+    <div class="modal-body">
+        <p><strong>Your confirmation email has been sended!</strong></p>
+    </div>
+    <div class="modal-footer">
+        <a asp-controller="Home" asp-action="Index" asp-area="Account" class="btn btn-outline-success btn-sm">
+            OK
+        </a>
+    </div>
+</div>
+
+<partial name="LayoutBase/_Layout_Part_2_Body_Block" />
+
+<partial name="Blocks/_CommonBlock" />
+
+<partial name="LayoutBase/_Layout_Part_3_Block" />

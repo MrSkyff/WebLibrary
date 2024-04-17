@@ -1,0 +1,29 @@
+﻿@model ArticleViewModel
+
+
+
+
+
+
+        @foreach (var category in Model.Categories.Where(cat => cat.isAssigned))
+        {
+            @if (category.ParentId == 0)
+            {
+                <div>
+                    <span class="badge rounded-pill bg-primary">
+                        <a class="link-light text-decoration-none" href="/u/@Model.User.UserName/lib/@Model.Library.Url/cat/@category.Url"><b>@category.Name</b></a>
+                    </span>
+
+                    @foreach (var subCategory in Model.Categories.Where(x => x.ParentId == category.Id && x.isAssigned))
+                    {
+                        <span class="badge rounded-pill bg-secondary">
+                            <a class="link-light text-decoration-none" href="/u/@Model.User.UserName/lib/@Model.Library.Url/cat/@category.Url/sub/@subCategory.Url">@subCategory.Name</a>
+                        </span>
+                    }
+                </div>
+
+            }
+
+        }
+
+

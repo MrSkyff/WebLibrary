@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  web-project:
+    build: .
+    image: 'skyff/web-project:v0.6.16'
+    volumes:
+      - data-storage:/app/wwwroot/data/
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DB_CONNECTION: Server=host.docker.internal; Database=WebProject-LocalTest; User ID='sa'; Password='Tempdevpass255'; Trusted_Connection=False; TrustServerCertificate=True;
+      SEND_GRID_APIKEY: HIDDEN;
+      SEND_GRID_EMAIL_FROM: No-Reply@MyProject.uk;
+      SEND_GRID_EMAIL_FROM_NAME: MyProject.uk;
+      AWS_USERNAME: HIDDEN;
+      AWS_PASSWORD: HIDDEN;
+      AWS_MAILFROM: HIDDEN;
+      LOGOUT_COOKIES_IN_DAYS: 30;
+    networks:
+      - web-project-network
+    ports:
+      - '9010:80'
+
+volumes:
+  data-storage:
+
+
+networks:
+  web-project-network:

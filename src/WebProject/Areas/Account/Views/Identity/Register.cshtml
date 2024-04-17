@@ -1,0 +1,176 @@
+﻿@model RegisterViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebLibrary</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/css/sign-in.css" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @@media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .b-example-divider {
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+            .nav-scroller .nav {
+                display: flex;
+                flex-wrap: nowrap;
+                padding-bottom: 1rem;
+                margin-top: -1px;
+                overflow-x: auto;
+                text-align: center;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+    </style>
+</head>
+
+<body class="text-center">
+
+    <main class="form-signin w-100 m-auto">
+        <img class="mb-4" src="~/images/logo.png" alt="" width="72">
+        <h1 class="h3 mb-3 fw-normal">Registration form</h1>
+
+        @if (ViewBag.InviteStatus == InviteStatus.Valid)
+        {
+
+            <form asp-action="Register">
+                @Html.AntiForgeryToken()
+                <input asp-for="InviteCode" type="hidden" />
+                <input asp-for="Email" type="hidden" />
+                <div class="form-floating">
+                    <input asp-for="Email" class="form-control" disabled />
+                    <label asp-for="Email"></label>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="FullName" type="text" class="form-control" id="floatingFullName" />
+                    <label asp-for="FullName"></label>
+                    <span class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="UserName" type="text" id="UserName-db-check" class="form-control" />
+                    <label asp-for="UserName"></label>
+                    <span id="UserName-db-check-response" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <label asp-for="Password"></label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                    <label asp-for="ConfirmPassword"></label>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+
+        }
+        else if (ViewBag.InviteStatus == InviteStatus.Empty)
+        {
+            <p>Please enter your invite code!</p>
+        }
+        else if (ViewBag.InviteStatus == InviteStatus.InValid)
+        {
+
+            <p>Invalid invide code, try another one or contact support!</p>
+
+        }
+        else if (ViewBag.InviteStatus == InviteStatus.Used)
+        {
+            <p>Invide code, already used!</p>
+        }
+        else if (ViewBag.InviteStatus == InviteStatus.Expired)
+        {
+            <p>Invide code is expired!</p>
+        }
+
+        @if (ViewBag.InviteStatus != InviteStatus.Valid)
+        {
+            <form asp-area="Account" asp-controller="Identity" asp-action="Register" method="get">
+                <input type="text" size="36" value="" name="value" />
+                <p class="mt-2"><input class="btn btn-primary" type="submit" value="Enter" /></p>
+            </form>
+        }
+
+
+    </main>
+    <script src="~/lib/jquery/jquery.slim.min.js"></script>
+    <script>
+        let userNameIsPassed = false;
+
+        $("#UserName-db-check").on("blur", function () {
+
+            const userName = $(this).val();
+
+            if (!/^\S{2,}$/.test(userName)) {
+                $("#UserName-db-check-response").text("Invalid UserName: must be at least 2 characters, and must contain no whitespace.");
+            }
+            else {
+                fetch("/Account/IdentityApi/IsUserNameExist?username=" + userName)
+                    .then((response) => response.json())
+                    .then((data) => {
+
+                        if (data.status == true) {
+                            $("#UserName-db-check-response").text("User name is already exists.");
+                            userNameIsPassed = false;
+                        }
+                        else {
+                            $("#UserName-db-check-response").text("");
+                            userNameIsPassed = true;
+                        }
+                    });
+            }
+
+        });
+    </script>
+
+</body>
+</html>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+
+

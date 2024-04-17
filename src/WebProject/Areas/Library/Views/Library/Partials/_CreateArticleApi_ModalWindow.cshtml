@@ -1,0 +1,111 @@
+﻿<div class="modal fade" id="formNewArticle" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLabel">New Article</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" asp-area="Library" asp-controller="ArticleManager" asp-action="CreateNewArticle" id="formArticle">
+
+
+                    <input type="hidden" name="article.LibraryId" value="@Model.Library.Id" />
+                    <input type="hidden" name="article.UserId" value="@Model.User.Id" />
+
+
+                    <div class="mb-3">
+                        <label class="col-form-label">Title:</label>
+                        <input name="article.Title" type="text" class="form-control" id="Name-Article">
+                        <div id="Name-check-Article" class="form-text"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Library URL:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon3">/u/@Model.User.UserName/lib/@Model.Library.Url/read/</span>
+                            <input name="article.Url" type="text" class="form-control" id="Url-Article" aria-describedby="basic-addon3">
+                        </div>
+                        <div id="Url-check-Article" class="form-text"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="col-form-label">Descripsion:</label>
+                        <textarea name="article.Description" class="form-control" id="Description" value=" "></textarea>
+                    </div>
+
+                    <div id="FormIsNotComplited-Article" class="form-text"></div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add article</button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    let nameIsPassedArticle = false;
+    let urlIsPassedArticle = false;
+
+    $("#Name-Article").on("blur", function () {
+
+        const nameArticle = $(this).val();
+
+        if (!/.{2,}/.test(nameArticle)) {
+            $("#Name-check-Article").text("Invalid Name: must be at least 2 characters");
+            nameIsPassedArticle = false;
+        } else {
+            $("#Name-check-Article").text("Name is ok.");
+            nameIsPassedArticle = true;
+        }
+
+    });
+
+
+    $("#Url-Article").on("blur", function () {
+
+        const urlArticle = $(this).val();
+        console.log(urlArticle);
+        if (!/^[A-Za-z0-9-+_]{2,}$/.test(urlArticle)) {
+            $("#Url-check-Article").text("Invalid URL: must be at least 2 characters, and must contain only letters, numbers, '-', '+', or '_'.");
+        }
+        else {
+            fetch("/Library/ArticleManagerApi/CheckIsUrlExist?url=" + urlArticle + "&libraryId=" + libraryId)
+                .then((response) => response.json())
+                .then((data) => {
+
+                    if (data.status == true) {
+                        $("#Url-check-Article").text("Url already exists.");
+                        urlIsPassedArticle = false;
+                    }
+                    else {
+                        $("#Url-check-Article").text("Url is ok.");
+                        urlIsPassedArticle = true;
+                    }
+                });
+        }
+
+    });
+
+
+</script>
+
+<script>
+    const formChecker = document.getElementById('formArticle');
+
+    formChecker.addEventListener('submit', function (event) {
+        // Check if the name and URL are both passed
+        if (nameIsPassedArticle && urlIsPassedArticle) {
+
+        } else {
+            // If not, prevent the form from being submitted
+            event.preventDefault();
+            $("#FormIsNotComplited-Article").text("Form is not complited.");
+        }
+    });
+</script>

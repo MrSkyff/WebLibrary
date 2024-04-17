@@ -1,0 +1,138 @@
+﻿@model CreateInviteViewModel
+
+<div class="modal fade" id="NewInviteForm" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLabel">New invite</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" id="inviteForm">
+
+                    <div class="mb-3">
+                        <label class="col-form-label">Full Name:</label>
+                        <input asp-for="FullName" type="text" class="form-control" id="FullName">
+                        <div id="FullName-check" class="form-text"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="col-form-label">Email:</label>
+                        <input asp-for="Email" type="text" class="form-control" id="Email">
+                        <div id="InviteEmail-check" class="form-text"></div>
+                        <div id="UserEmail-check" class="form-text"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="validTill" class="form-label">Valid Till:</label>
+                        <input type="datetime-local" class="form-control" id="ValidTill">
+                    </div>
+
+                    <div id="FormIsNotComplited" class="form-text"></div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let inviteEmailPassed = false;
+    let userEmailPassed = false;
+
+    $("#FullName").on("blur", function () {
+
+        const name = $(this).val();
+
+        if (!/.{2,}/.test(name)) {
+            $("#FullName-check").text("Invalid FullName: must be at least 2 characters");
+            nameIsPassed = false;
+        } else {
+            $("#FullName-check").text("");
+            nameIsPassed = true;
+        }
+
+    });
+
+
+
+    $("#Email").on("blur", function () {
+
+        const email = $(this).val();
+
+        fetch("/Account/InviteApi/isEmailExist?email=" + email)
+            .then((response) => response.json())
+            .then((data) => {
+
+                if (data.isInviteEmailExist == true) {
+                    $("#InviteEmail-check").text("Invite email already exists.");
+                    inviteEmailPassed = false;
+                }
+                else {
+                    $("#InviteEmail-check").text("Invite email is ok.");
+                    inviteEmailPassed = true;
+                }
+
+                if (data.isUserEmailExist == true) {
+                    $("#UserEmail-check").text("User email already exists.");
+                    userEmailPassed = false;
+                }
+                else {
+                    $("#UserEmail-check").text("User email is ok.");
+                    userEmailPassed = true;
+                }
+
+            });
+    });
+
+
+
+    const form = document.querySelector("#inviteForm");
+
+    //Submit invite creation
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const invite = {
+            FullName: document.querySelector("#FullName").value,
+            Email: document.querySelector("#Email").value,
+            ValidTill: document.querySelector("#ValidTill").value,
+        };
+
+        if (inviteEmailPassed && userEmailPassed) {
+
+            fetch("/Account/InviteApi/CreateInvite", {
+                method: "POST",
+                headers: { "Content-Type": "application/json; charset=utf-8", },
+                body: JSON.stringify(invite),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+
+                    if (data.model == true) {
+                        $("#InviteCard").empty();
+                        inviteListLoad();
+                        $("#NewInviteForm").modal("hide");
+                        $("#inviteForm input").val("");
+                        inviteEmailPassed = false;
+                        userEmailPassed = false;
+                    }
+                })
+                .catch((error) => console.error(error));
+
+        } else {
+            $("#FormIsNotComplited").text("Form is not complited");
+            if (!inviteEmailPassed) { $("#InviteEmail-check").text("Invite email already exists."); }
+            if (!userEmailPassed) { $("#UserEmail-check").text("User email already exists."); }
+        }
+    });
+</script>

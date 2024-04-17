@@ -1,0 +1,48 @@
+﻿<div class="modal fade" id="libraryModalWindow" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLabel"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" id="libraryModalForm">
+
+                    <input type="hidden" id="Id" />
+
+                    <div class="mb-3">
+                        <label class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="Name">
+                        <div id="Name-check" class="form-text"></div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">Library URL:</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon3">webwiser.uk/u/@Model.User.UserName/lib/</span>
+                            <input type="text" class="form-control" id="Url" aria-describedby="basic-addon3">
+                        </div>
+                        <div id="Url-check" class="form-text"></div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="col-form-label">Descripsion:</label>
+                        <textarea class="form-control" id="Description"></textarea>
+                    </div>
+
+                    <div id="FormIsNotComplited" class="form-text"></div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary submit-type"></button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>

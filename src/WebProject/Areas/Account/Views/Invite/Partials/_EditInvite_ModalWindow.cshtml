@@ -1,0 +1,127 @@
+﻿@model CreateInviteViewModel
+
+<div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="ediotModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLabel">Edit invite</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" id="inviteEditForm">
+
+                    <div class="mb-3">
+                        <label for="inviteCode" class="form-label">Invite Code:</label>
+                        <input type="text" class="form-control" id="inviteCode" disabled>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name:</label>
+                        <input type="text" class="form-control" id="fullName">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" disabled>
+                        <div id="InviteEmail-check-OnEdit" class="form-text"></div>
+                        <div id="UserEmail-check-OnEdit" class="form-text"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="validTill" class="form-label">Valid Till:</label>
+                        <input type="datetime-local" class="form-control" id="validTill">
+                    </div>
+
+                    <label class="form-label">Invite is used?</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input" id="isUsed">
+                        </div>
+                        <input type="text" class="form-control" aria-label="Text input with checkbox" id="useDate">
+                    </div>
+
+                    <div id="FormIsNotComplitedOnEdit" class="form-text"></div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var editModal = document.getElementById('EditModal');
+    editModal.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal window
+        var button = event.relatedTarget;
+
+        // Retrieve the data passed in the data-invite attribute
+        var invite = JSON.parse(button.getAttribute('data-invite'));
+
+        // Set the values of the form fields
+        document.getElementById('inviteCode').value = invite.inviteCode;
+        document.getElementById('fullName').value = invite.fullName;
+        document.getElementById('email').value = invite.email;
+        document.getElementById('validTill').value = invite.validTill;
+
+        document.getElementById('isUsed').checked = invite.isUsed;
+        document.getElementById('useDate').value = invite.useDate;
+    });
+</script>
+
+
+<script>
+    let inviteEmailEditPassed = true;
+    let userEmailEditPassed = true;
+
+
+    const formEdit = document.querySelector("#inviteEditForm");
+
+    //Submit invite creation
+    formEdit.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const invite = {
+            FullName: document.querySelector("#fullName").value,
+            Email: document.querySelector("#email").value,
+            InviteCode: document.querySelector("#inviteCode").value,
+            ValidTill: document.querySelector("#validTill").value,
+            IsUsed: document.querySelector("#isUsed").checked,
+            UseDate: document.querySelector("#useDate").value,
+        };
+
+        if (inviteEmailEditPassed && userEmailEditPassed) {
+
+            fetch("/Account/InviteApi/UpdateInvite", {
+                method: "POST",
+                headers: { "Content-Type": "application/json; charset=utf-8", },
+                body: JSON.stringify(invite),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+
+                    if (data == true) {
+                        $("#InviteCard").empty();
+                        inviteListLoad();
+                        $("#EditModal").modal("hide");
+                        $("#inviteEditForm input").val("");
+                        inviteEmailPassed = false;
+                        userEmailPassed = false;
+                    }
+                })
+                .catch((error) => console.error(error));
+
+        } else {
+            $("#FormIsNotComplitedOnEdit").text("Form is not complited");
+            if (!inviteEmailPassed) { $("#InviteEmail-check-OnEdit").text("Invite email already exists."); }
+            if (!userEmailPassed) { $("#UserEmail-check-OnEdit").text("User email already exists."); }
+        }
+    });
+</script>
